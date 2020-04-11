@@ -1,3 +1,3 @@
 dependencies {
-    implementation libraries.roll_web
+    implementation libraries.spring_webmvc
 }

@@ -1,0 +1,84 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url 'https://maven.pkg.github.com/AlphaHinex/spring-roll'
+            credentials(PasswordCredentials) {
+                username = project.findProperty("gpr.user") ?: System.getenv("GH_OWNER")
+                password = project.findProperty("gpr.reader") ?: System.getenv("GH_PKG_READER")
+            }
+        }
+    }
+    dependencies {
+        classpath 'io.github.spring-roll:roll-dev-configs:0.0.8-SNAPSHOT'
+    }
+}
+
+plugins {
+    id "com.github.spotbugs" version "3.0.0"
+    id "io.freefair.lombok" version "4.1.6"
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url 'https://maven.pkg.github.com/AlphaHinex/checkstyle-checkers'
+            credentials(PasswordCredentials) {
+                username = project.findProperty("gpr.user") ?: System.getenv("GH_OWNER")
+                password = project.findProperty("gpr.reader") ?: System.getenv("GH_PKG_READER")
+            }
+        }
+        maven {
+            url 'https://maven.pkg.github.com/AlphaHinex/spring-roll'
+            credentials(PasswordCredentials) {
+                username = project.findProperty("gpr.user") ?: System.getenv("GH_OWNER")
+                password = project.findProperty("gpr.reader") ?: System.getenv("GH_PKG_READER")
+            }
+        }
+    }
+}
+
+apply plugin: 'idea'
+apply from: this.getClass().getClassLoader().getResource("META-INF/configs/scaffold/module.gradle")
+
+group = 'alpha.hinex.demo'
+version = '0.0.1-SNAPSHOT'
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+
+    apply plugin: "io.freefair.lombok"
+
+    apply from: this.getClass().getClassLoader().getResource("META-INF/configs/dependencies.gradle")
+    apply from: this.getClass().getClassLoader().getResource("META-INF/configs/quality/codeQuality.gradle")
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    group = rootProject.group
+    version = rootProject.version
+
+    dependencies {
+        annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:${versions.spring_boot}")
+             implementation platform("org.springframework.boot:spring-boot-dependencies:${versions.spring_boot}")
+             implementation platform("org.springframework.cloud:spring-cloud-dependencies:${versions.spring_cloud}")
+             implementation platform("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${versions.spring_cloud_alibaba}")
+    
+        annotationProcessor libraries.lombok,
+                            libraries.spring_boot_configuration_processor
+
+                compileOnly libraries.lombok,
+                            libraries.spring_boot_starter_logging
+
+        testImplementation libraries.spring_boot_starter_test
+        testImplementation libraries.h2
+        testImplementation libraries.roll_test
+    }
+
+}

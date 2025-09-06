@@ -52,7 +52,8 @@ subprojects {
     version = rootProject.version
 
     dependencies {
-             implementation platform("org.springframework.boot:spring-boot-dependencies:${versions.spring_boot}")
+            implementation platform("org.springframework.boot:spring-boot-dependencies:${versions.spring_boot}")
+            implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
         testImplementation libraries.spring_boot_starter_test
         testImplementation libraries.roll_test

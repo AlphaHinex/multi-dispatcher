@@ -1,7 +1,18 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
-    implementation libraries.spring_boot_starter_web
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude([group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'])
+    }
+
+    def env=System.getProperty("env")
+    if ('jetty'.equals(env)) {
+        implementation 'org.springframework.boot:spring-boot-starter-jetty'
+    } else if ('undertow'.equals(env)) {
+        implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    } else {
+        implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    }
 
     // Select on demand
     implementation project(':foo'),

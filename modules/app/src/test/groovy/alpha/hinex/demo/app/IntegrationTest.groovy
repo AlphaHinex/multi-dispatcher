@@ -9,8 +9,10 @@ class IntegrationTest extends AbstractIntegrationTest {
     @Test
     void test() {
         assert resOfGet('/', HttpStatus.OK) == 'hello world'
-        assert resOfGet('/foo/same/path', HttpStatus.OK) == 'in foo controller'
-        assert resOfGet('/bar/same/path', HttpStatus.OK) == 'in bar controller'
+        assert resOfGet('/same/path', HttpStatus.OK)['Context Path'] == ''
+        assert resOfGet('/same/path', HttpStatus.OK)['Servlet Path'] == '/same/path'
+        assert resOfGet('/foo/same/path', HttpStatus.OK)['Servlet Path'] == '/foo'
+        assert resOfGet('/bar/same/path', HttpStatus.OK)['Servlet Path'] == '/bar'
     }
 
 }
